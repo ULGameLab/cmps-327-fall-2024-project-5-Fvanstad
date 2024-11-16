@@ -59,6 +59,31 @@ public class PathFinder
             foreach (Tile nextTile in current.tile.Adjacents)
             {
                 
+                if (nextTile.isPassable)
+                {
+                    double costSoFar = current.costSoFar + 10;
+
+                    double distance = HeuristicsDistance(nextTile, goal);
+
+                    double priority = costSoFar + distance;
+
+                    Node nextNode = TODOList.Find(node => node.tile == nextTile);
+
+                    if (nextNode == null)
+                    {
+                        nextNode = new Node(nextTile, priority, current, costSoFar);
+
+                        TODOList.Add(nextNode);
+                    }
+                    else if(costSoFar < nextNode.costSoFar) 
+                    {
+                        nextNode.costSoFar = costSoFar;
+                        nextNode.priority = priority;
+                        nextNode.cameFrom = current;
+
+                    }
+                }
+               
             }
         }
         return new Queue<Tile>(); // Returns an empty Path if no path is found
@@ -92,7 +117,7 @@ public class PathFinder
             // Just increase the F cost of the enemy tile and the tiles around it by a certain ammount (say 30)
             foreach (Tile nextTile in current.tile.Adjacents)
             {
-
+               
             }
         }
         return new Queue<Tile>(); // Returns an empty Path
